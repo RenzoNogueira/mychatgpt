@@ -24,7 +24,7 @@ while True:
         promptImage = input("Descrição da imagem: ")
         createImage(promptImage, size)
         continue
-    response = creatCompletion(model, prompt, temperature, max_tokens, preTeinamento, respostas)
+    response = creatCompletion(model, prompt, temperature, max_tokens, train, respostas)
     
     # Verifica se no texto contem chaves
     if "{" in response:

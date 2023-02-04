@@ -14,10 +14,10 @@ def createImage(prompt, size="1024x1024"):
     webbrowser.open(response)
 
 ## Função executar chat
-def creatCompletion(model, prompt, temperature, max_tokens, preTeinamento, respostas):
+def creatCompletion(model, prompt, temperature, max_tokens, train, respostas):
     response = openai.Completion.create(
         model=model,
-        prompt=preTeinamento + respostas + "Você: " + prompt,
+        prompt=train + respostas + "Você: " + prompt,
         temperature=temperature,
         max_tokens=max_tokens
     )

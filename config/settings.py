@@ -1,7 +1,7 @@
 import os
 import openai
 from key import key
-from treinamento import preTeinamento
+from train import train
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 openai.api_key = key
