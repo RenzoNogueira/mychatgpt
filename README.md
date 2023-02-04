@@ -1,5 +1,7 @@
 # mychatgpt
 
+![Logo](assets/logo.png)
+
 ## Utilização
 
 1. Crie un arquivo **key.py** dentro da pasta **config**, dentro deste arquivo salve a sua chave.
