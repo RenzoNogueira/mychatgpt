@@ -16,4 +16,3 @@ Chat: Sim, um CNPJ pode terminar com 00. Isso acontece porque o CNPJ é composto
 """
 cunstomTrain = cunstomTrain.replace("{yourName}", yourName)
 train = train.replace("{yourName}", yourName).replace("{cunstomTrain}", cunstomTrain)
-print(train)
