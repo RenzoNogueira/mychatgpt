@@ -8,44 +8,66 @@ class Utils extends OpenAi
 {
     private $prompt;
     private $trainingData;
+    private $yourName;
+    private $chatData;
     public function __construct()
     {
         global $OPENAI_API_KEY;
         global $TREINAMENTO;
-        parent::__construct($OPENAI_API_KEY);
+        global $YOUR_NAME;
+        $this->setYourName($YOUR_NAME);
         $this->setTrainingData($TREINAMENTO);
+        $this->chatData = $this->getChatData();
+        parent::__construct($OPENAI_API_KEY);
+    }
+
+    // Pega os dados json do arquivo chat.json
+    public function getChatData()
+    {
+        $this->chatData = file_get_contents(ROOT.'/saves/chat.json');
+        $this->chatData = json_decode($this->chatData, true);
+        return $this->chatData;
+    }
+
+    // Pega os textos do chatData e concatena em uma string
+    public function getChatDataString()
+    {
+        $chatData = $this->getChatData();
+        $chatDataString = "";
+        foreach ($chatData as $key => $value) {
+            $chatDataString .= $value['prompt'];
+        }
+        return $chatDataString;
+    }
+
+    // Adiciona os dados no arquivo chat.json
+    public function addChatData($data)
+    {
+        // Concatena os dados do chat
+        $this->chatData[] = $data;
+        $chatData = json_encode($this->chatData);
+        file_put_contents(ROOT.'/saves/chat.json', $chatData);
     }
 
     public function setTrainingData($trainingData)
     {
         $this->trainingData = $trainingData;
     }
-    public function createCompletion($prompt)
+
+    public function setYourName($yourName)
     {
-        ini_set('memory_limit','2000M');
-        $this->prompt = $this->trainingData . $prompt;
-        $response = json_decode($this->completion(["prompt" => $this->prompt, "max_tokens" => 300, "temperature" => 0]));
-        $response = $response->choices[0]->text;
-        $command = "";
-        // Verifica se no response contém "${" e "}"
-        if (strpos($response, "{") !== false && strpos($response, "}") !== false) {
-            // Se conter executa o comando entre as chaves
-            $command = $this->executeCommand(substr($response, strpos($response, "{") + 2, strpos($response, "}") - 2));
-        }
-        if(strlen($command) > 0){
-            return "{".$command."} ".$response;
-        } else {
-            return $response;
-        }
+        $this->yourName = $yourName;
     }
 
-    private function executeCommand($command)
+    public function createCompletion($prompt)
     {
-        $response = shell_exec($command);
-        if(strlen($response) > 0){
-            return $response;
-        } else {
-            return "Comando não encontrado.";
-        }
+        $prompt = "- " . $prompt;
+        $this->addChatData(["prompt" => $prompt]);
+        // Junta os dados de treinamento com o histórico de conversa
+        $this->prompt = $this->trainingData . $this->getChatDataString();
+        $response = json_decode($this->completion(["prompt" => $this->prompt, "max_tokens" => 300, "temperature" => 0]));
+        $response = $response->choices[0]->text;
+        $this->addChatData(["prompt" => $response]);
+        return $response;
     }
 }

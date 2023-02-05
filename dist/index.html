@@ -8,15 +8,34 @@
     <title>My ChatGPT</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
 
     <main id="app">
-        <div class="container p-4">
-            <input type="text" v-model="prompt" class="form-control mb-4" placeholder="Digite aqui...">
-            <button type="button" class="btn btn-primary" @click="send()">Send</button>
-            <p class="py-4">{{ response }}</p>
+        <nav class="px-3 py-2 text-success d-flex justify-content-between align-items-center">
+            <h1 class="nav-title">Chat Bot</h1>
+            <div class="d-none d-md-block">
+                <img src="../assets/bot.png" alt="bot" id="bot-nav" class="img-fluid">
+            </div>
+        </nav>
+        <div class="container">
+            <div id="avatar-animation" class="justify-content-center align-items-center d-flex d-md-none">
+                <img src="../assets/bot.png" alt="bot" id="bot" class="img-fluid">
+            </div>
+            <div class="chat position-relative">
+                <div class="menssages mt-5">
+                    <v-menssages :menssages="menssages"></v-menssages>
+                </div>
+                <div
+                    class="input d-flex align-items-center justify-content-between position-fixed bottom-0 start-0 end-0 pb-2 px-2">
+                    <input type="text" v-model="prompt" class="form-control prompt me-2 border border-ligth"
+                        placeholder="Digite aqui...">
+                    <button type="button" class="btn btn-primary" @click="send()"><i
+                            class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -25,31 +44,96 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://kit.fontawesome.com/274af9ab8f.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
+        const v_menssages = {
+            props: ['menssages'],
+            template: `
+                <div v-for="menssage in menssages" class="menssage">
+                    <div v-if="menssage.type == 'prompt'" class="prompt text-end my-2">
+                        <div class="row">
+                            <div class="col d-flex justify-content-end">
+                                <div class="text border border-secundary rounded px-2 ms-5">
+                                    {{ menssage.text }}
+                                </div>
+                            </div>
+                            <div class="avatar col-auto">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="menssage.type == 'response'" class="prompt text-start my-2">
+                        <div class="row">
+                            <div class="avatar col-auto">
+                                <img src="../assets/bot.png" alt="bot-chat" class="img-fluid bot-chat">
+                            </div>
+                            <div class="col d-flex justify-content-start">
+                                <div class="text border border-secundary rounded px-2 mx-2 me-5">
+                                    {{ menssage.text }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `
+        };
+
         const { createApp } = Vue;
+
+
         const app = createApp({
             data() {
                 return {
                     prompt: '',
-                    response: ''
+                    menssages: [],
+                    responses: []
                 }
             },
             methods: {
                 send() {
                     const SELF = this;
+                    SELF.menssages.push({
+                        text: SELF.prompt,
+                        type: 'prompt'
+                    });
+                    SELF.scroll();
+                    // Limpa o prompt
                     $.post('request.php', {
                         'prompt': this.prompt
                     }, function (data) {
-                        console.log(data);
                         SELF.response = data;
+                        SELF.menssages.push({
+                            text: SELF.response,
+                            type: 'response'
+                        });
+                        SELF.scroll();
                     });
+                    SELF.prompt = '';
+                },
+                // Deslizar o scroll para o final
+                scroll() {
+                    const SELF = this;
+                    $('.menssages').animate({
+                        scrollTop: $('.menssages').get(0).scrollHeight
+                    }, 1000);
                 }
+            },
+            mounted() {
+                const SELF = this;
+                $(".prompt").keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        SELF.send();
+                    }
+                });
+            },
+            components: {
+                'v-menssages': v_menssages
             }
         });
-        
-        app.mount('#app');
-        </script>
+
+        app.mount('#app')
+    </script>
 </body>
 
 </html>

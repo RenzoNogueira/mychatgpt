@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&display=swap');
+
+h1 {
+    font-family: 'Big Shoulders Display', cursive;
+}
+
+.nav-title {
+    font-size: 42px;
+}
+
+.chat .menssages {
+    padding-bottom: 90px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 50vh;
+}
+
+body {
+    overflow: hidden;
+}
+
+.chat .menssages::-webkit-scrollbar {
+    width: 10px;
+}
+
+.chat .menssages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat .menssages::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.text {
+    width: fit-content !important;
+}
+
+#bot {
+    max-height: 300px !important;
+}
+
+#bot-nav {
+    max-height: 100px !important;
+}
+
+#bot,
+#bot-nav {
+    animation: bot-vibrate 5s infinite;
+}
+
+@keyframes bot-vibrate {
+    0% {
+        transform: translate(0, 0px);
+    }
+
+    25% {
+        transform: translate(0, 5px);
+    }
+
+    50% {
+        transform: translate(0, -5px);
+    }
+
+    75% {
+        transform: translate(0, 5px);
+    }
+
+    100% {
+        transform: translate(0, 0px);
+    }
+
+}
+
+.bot-chat {
+    max-height: 40px !important;
+}
