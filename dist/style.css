@@ -1,11 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&display=swap');
 
+:root {
+    --magenta-medim: #eeb6e1;
+    --magenta: #cf3690;
+    --magenta-dark: #58163b;
+    --gray: #7a7b84;
+    --gray-dark: #2a2a2d;
+    --magenta-ligth: #ceb0c4;
+    --white: #e8e8e9;
+}
+
 h1 {
     font-family: 'Big Shoulders Display', cursive;
 }
 
+body {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    background: var(--gray);
+}
+
 .nav-title {
     font-size: 42px;
+    color: var(--magenta-dark);
 }
 
 .chat .menssages {
@@ -15,16 +33,12 @@ h1 {
     max-height: 50vh;
 }
 
-body {
-    overflow: hidden;
-}
-
 .chat .menssages::-webkit-scrollbar {
     width: 10px;
 }
 
 .chat .menssages::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    /* background: #f1f1f1; */
 }
 
 .chat .menssages::-webkit-scrollbar-thumb {
@@ -33,6 +47,21 @@ body {
 
 .text {
     width: fit-content !important;
+}
+
+input, .text {
+    background-color: #e8e8e9 !important;
+}
+
+.btn-primary {
+    background-color: var(--magenta-dark) !important;
+    border-color: var(--white) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--gray-dark) !important;
+    border-color: var(--white) !important;
+    color: var(--magenta) !important;
 }
 
 #bot {
