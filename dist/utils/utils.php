@@ -4,6 +4,9 @@ include_once "config/settings.php";
 
 use Orhanerday\OpenAi\OpenAi;
 
+// Data time brasileiro
+date_default_timezone_set('America/Sao_Paulo');
+
 class Utils extends OpenAi
 {
     private $prompt;
@@ -62,12 +65,12 @@ class Utils extends OpenAi
     public function createCompletion($prompt)
     {
         $prompt = "- " . $prompt;
-        $this->addChatData(["prompt" => $prompt]);
+        $this->addChatData(["prompt" => $prompt, "type" => "user", "date" => date("d/m/Y H:i:s")]);
         // Junta os dados de treinamento com o histórico de conversa
         $this->prompt = $this->trainingData . $this->getChatDataString();
         $response = json_decode($this->completion(["prompt" => $this->prompt, "max_tokens" => 300, "temperature" => 0]));
         $response = $response->choices[0]->text;
-        $this->addChatData(["prompt" => $response]);
+        $this->addChatData(["prompt" => $response, "type" => "bot", "date" => date("d/m/Y H:i:s")]);
         return $response;
     }
 }

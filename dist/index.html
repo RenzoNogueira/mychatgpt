@@ -29,18 +29,24 @@
                     <v-menssages :menssages="menssages"></v-menssages>
                 </div>
                 <div
-                    class="input d-flex align-items-center justify-content-between position-fixed bottom-0 start-0 end-0 pb-2 px-2">
-                    <input type="text" v-model="prompt" class="form-control prompt me-2 border border-ligth"
-                        placeholder="Digite aqui...">
-                    <button type="button" class="btn btn-primary" @click="send()"><i
-                            class="fas fa-paper-plane"></i></button>
+                    class="area-input position-fixed bottom-0 start-0 end-0 pb-2 px-2 d-flex align-items-center justify-content-center">
+                    <!-- <input type="text" v-model="prompt" class="form-control prompt me-2 border border-ligth"
+                        placeholder="Digite aqui..."> -->
+                    <div class="d-flex justify-content-between">
+                        <textarea v-model="prompt" class="form-control prompt me-2 border border-ligth" rows="1"
+                            placeholder="Digite aqui..."></textarea>
+                        <button type="button" class="btn btn-primary" @click="send()"><i
+                                class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="https://kit.fontawesome.com/274af9ab8f.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -78,8 +84,6 @@
         };
 
         const { createApp } = Vue;
-
-
         const app = createApp({
             data() {
                 return {
@@ -124,19 +128,26 @@
             },
             mounted() {
                 const SELF = this;
-                SELF.initChat(); // Inicia o chat
+                // SELF.initChat(); // Inicia o chat
 
                 $(".prompt").keyup(function (event) {
-                    if (event.keyCode === 13) {
+                    if (event.keyCode === 45) { // Tecla Insert para enviar
                         SELF.send();
                     }
+                    // caso enter, adiciona uma row ao textarea
+                    if (event.keyCode === 13 || event.keyCode === 8) { // Tecla Enter ou Backspace
+                        event.preventDefault();
+                        // conta a quantidade de quebras de linha
+                        var qtd = ($(this).val().match(/\n/g) || []).length;
+                        $(this).attr('rows', qtd + 1);
+                    }
+
                 });
             },
             components: {
                 'v-menssages': v_menssages
             }
         });
-
         app.mount('#app')
     </script>
 </body>

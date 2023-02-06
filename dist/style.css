@@ -26,6 +26,15 @@ body {
     color: var(--magenta-dark);
 }
 
+.area-input div {
+    width: 100%;
+    max-width: 700px;
+}
+
+.area-input div button {
+    max-height: 38px;
+}
+
 .chat .menssages {
     padding-bottom: 90px;
     overflow-y: scroll;
