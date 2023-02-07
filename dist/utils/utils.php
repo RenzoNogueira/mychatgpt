@@ -1,6 +1,8 @@
 <?php
 
 include_once "config/settings.php";
+require_once "php/insertData.php";
+require_once "php/getData.php";
 
 use Orhanerday\OpenAi\OpenAi;
 
@@ -27,7 +29,7 @@ class Utils extends OpenAi
     // Pega os dados json do arquivo chat.json
     public function getChatData()
     {
-        $this->chatData = file_get_contents(ROOT.'/saves/chat.json');
+        $this->chatData = file_get_contents(ROOT . '/saves/chat.json');
         $this->chatData = json_decode($this->chatData, true);
         return $this->chatData;
     }
@@ -49,7 +51,7 @@ class Utils extends OpenAi
         // Concatena os dados do chat
         $this->chatData[] = $data;
         $chatData = json_encode($this->chatData);
-        file_put_contents(ROOT.'/saves/chat.json', $chatData);
+        file_put_contents(ROOT . '/saves/chat.json', $chatData);
     }
 
     public function setTrainingData($trainingData)
@@ -64,13 +66,17 @@ class Utils extends OpenAi
 
     public function createCompletion($prompt)
     {
-        $prompt = "- " . $prompt;
-        $this->addChatData(["prompt" => $prompt, "type" => "user", "date" => date("d/m/Y H:i:s")]);
-        // Junta os dados de treinamento com o histórico de conversa
-        $this->prompt = $this->trainingData . $this->getChatDataString();
-        $response = json_decode($this->completion(["prompt" => $this->prompt, "max_tokens" => 300, "temperature" => 0]));
-        $response = $response->choices[0]->text;
-        $this->addChatData(["prompt" => $response, "type" => "bot", "date" => date("d/m/Y H:i:s")]);
-        return $response;
+        // $prompt = "- " . $prompt;
+        // $this->addChatData(["prompt" => $prompt, "type" => "user", "date" => date("d/m/Y H:i:s")]);
+        // // Junta os dados de treinamento com o histórico de conversa
+        // $this->prompt = $this->trainingData . $this->getChatDataString();
+        // $response = json_decode($this->completion(["prompt" => $this->prompt, "max_tokens" => 50, "temperature" => 0]));
+        // $response = $response->choices[0]->text;
+        // $this->addChatData(["prompt" => $response, "type" => "bot", "date" => date("d/m/Y H:i:s")]);
+        // return $response;
+        global $conn;
+        $history = getChat($conn);
+        $history = mountChatText($this->yourName, "Bot", $history);
+        echo $history;
     }
 }
