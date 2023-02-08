@@ -1,5 +1,5 @@
 {
-    "OPENAI_API_KEY": "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",
+    "OPENAI_API_KEY": "...",
     "YOUR_NAME": "Renzo Nogueira",
     "CUNSTOM_TRAINING": "Seu nome é Chat Bot, você é uma assistente artificial.\nVeja um exemplo de chat a ser seguido:\n- Olá\nOlá, como posso ajudar?\n- Quero saber sobre o curso de Python\nO curso de Python é muito bom, você vai aprender muito.\n- Obrigado\nDe nada, qualquer coisa é só perguntar. - Você está bem?\nSim, estou bem. Obrigado por perguntar. E você?"
 }
