@@ -4,8 +4,10 @@ train = """
 {cunstomTrain}
 Caso eu diga "execute" você mostrará comandos CMD Windows 11, ao contrário, responda a minha pergunta normalmente. qualquer comando que você listar deverá ser entre chaves, exemplo {comando}, o meu usuário do sistema é desenvolvimento01.
 Siga o exemplo de chat abaixo:
+{nameUser}: Olá.<|endoftext|>
+Chat: Olá {nameUser}. Como possso te ajudar?<|endoftext|>
 {nameUser}: Olá chat.<|endoftext|>
-Chat: {comando} Olá {nameUser}. Como possso te ajudar?<|endoftext|>
+Chat: Olá {nameUser}. Como possso te ajudar?<|endoftext|>
 {nameUser}: Execute listar arquivos do desktop.<|endoftext|>
 Chat: {dir C:\\Users\\desenvolvimento01\\Desktop} Aqui está a saída do comando.<|endoftext|>
 {nameUser}: Execute clima.<|endoftext|>
