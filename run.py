@@ -38,8 +38,8 @@ def main():
         promptImage = input("Descrição da imagem: ")
         responseImage = []
         for i in range(4):  # Loop para criar 4 imagens
-            responseImage = openai.Image.create( prompt=promptImage, n=1, size=size)  # Cria a imagem
-            responseImage.append(responseImage)  # Adiciona a imagem no array
+            response = openai.Image.create( prompt=promptImage, n=1, size=size)  # Cria a imagem
+            responseImage.append(response)  # Adiciona a imagem no array
         for response in responseImage:  # Pega a url da primeira imagem
             response = response['data'][0]['url']
             webbrowser.open(response)  # Abre a imagem criada no navegador
