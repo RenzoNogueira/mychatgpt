@@ -86,14 +86,14 @@ def main():
     def help():
         print("Comandos disponíveis: ")
         print("!clear - Limpar o console")
-        print("!help - Mostrar os comandos disponíveis")
-        print("!exit - Sair do chat")
-        print("!image - Criar uma imagem")
-        print("!export - Exportar o treinamento")
-        print("!import - Importar um treinamento")
-        print("!reset - Resetar o chat")
-        print("!like - Curtir a resposta do chat")
         print("!dislike - Descurtir a resposta do chat")
+        print("!exit - Sair do chat")
+        print("!export - Exportar o treinamento")
+        print("!help - Mostrar os comandos disponíveis")
+        print("!image - Criar uma imagem")
+        print("!import - Importar um treinamento")
+        print("!like - Curtir a resposta do chat")
+        print("!reset - Resetar o chat")
 
     ## VERIFICAR COMANDOS
     def checkCommand(command):
@@ -110,8 +110,8 @@ def main():
             exportTrain()
         elif command == "!import":
             print("Esolha o tipo de arquivo")
-            print("1 - Conversas salvas")
-            print("2 - Respostas curtidas")
+            print("1 - Buscar conversas salvas")
+            print("2 - Buscar respostas curtidas")
             op = input("Opção: ")
             if op == "1":
                 importTrain(input("Nome do arquivo: "), False)
@@ -161,7 +161,7 @@ def main():
 
     ## EXPORTAR O TREINAMENTO
     def exportTrain():
-        dataAtual = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        dataAtual = datetime.now().strftime("%d-%m-%Y")
         # Verifica se existe a pasta saves
         if not os.path.exists("saves"):
             os.makedirs("saves")
