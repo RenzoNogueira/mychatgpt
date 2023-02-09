@@ -1,2 +1,5 @@
 dist/config/settings.json
 *.pyc
+tempResposes/
+saves/
+tempResponses/

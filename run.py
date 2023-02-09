@@ -14,6 +14,7 @@ max_tokens = 300
 key = "..."
 nameUser = "User"
 respostas = ""
+respostasCurtidas = ""
 
 parser = argparse.ArgumentParser()  # cria um objeto para receber os argumentos
 ## Chave da API
@@ -27,15 +28,15 @@ def main():
 
     ## GERAR IMAGEM
     def generatImage(promptImage, size, n = 4):
-            try:
-                response = openai.Image.create( prompt=promptImage, n=n, size=size)  # Cria a imagem
-                if response['data'] != []:
-                    for i in response['data']:
-                        webbrowser.open(i['url']) # Abre a imagem criada no navegador
-            except openai.error.OpenAIError as e:
-                print('## Ocorreu um erro ao criar a imagem ##')
-                print('Erro: ', e.error['message'])
-                print('Tipo: ', e.error['type'])
+        try:
+            response = openai.Image.create( prompt=promptImage, n=n, size=size)  # Cria a imagem
+            if response['data'] != []:
+                for i in response['data']:
+                    webbrowser.open(i['url']) # Abre a imagem criada no navegador
+        except openai.error.OpenAIError as e:
+            print('## Ocorreu um erro ao criar a imagem ##')
+            print('Erro: ', e.error['message'])
+            print('Tipo: ', e.error['type'])
 
     ## ENTRADA PARA CRIAÇÃO DE IMAGEM
     def createImage():
@@ -91,6 +92,8 @@ def main():
         print("!export - Exportar o treinamento")
         print("!import - Importar um treinamento")
         print("!reset - Resetar o chat")
+        print("!like - Curtir a resposta do chat")
+        print("!dislike - Descurtir a resposta do chat")
 
     ## VERIFICAR COMANDOS
     def checkCommand(command):
@@ -106,9 +109,55 @@ def main():
         elif command == "!export":
             exportTrain()
         elif command == "!import":
-            importTrain(input("Nome do arquivo: "))
+            print("Esolha o tipo de arquivo")
+            print("1 - Conversas salvas")
+            print("2 - Respostas curtidas")
+            op = input("Opção: ")
+            if op == "1":
+                importTrain(input("Nome do arquivo: "), False)
+            elif op == "2":
+                importTrain(input("Data do arquivo(dd-mm-aaaa): "), True)
         elif command == "!reset":
             resetTrain()
+        elif command == "!like":
+            like()
+        elif command == "!dislike":
+            dislike()
+
+    ## CURTIR A RESPOSTA
+    def like():
+        ## Pega as ultimas 2 respostas do chat
+        global respostas
+        global respostasCurtidas
+        global nomeUser
+        resposta = respostas.split(nameUser + ": ")
+        ## Salva a ultima resposta do chat
+        respostasCurtidas += nameUser + ": " + resposta[1]
+        ## Verifica se existe a pasta tempResponses
+        if not os.path.exists("tempResponses"):
+            os.makedirs("tempResponses")
+        ## Cria o arquivo txt com as respostas curtidas
+        date = datetime.now().strftime("%d-%m-%Y")
+        with open("tempResponses/" + date + ".txt", "w", encoding="utf-8") as file:
+            file.write(respostasCurtidas)
+
+    ## DESCURTIR A RESPOSTA
+    def dislike():
+        ## Remove a ultima resposta do chat
+        global respostas
+        resposta = respostas.split(nameUser + ": ")
+        textRespostas = ""
+        respostaRemovida = ""
+        for i in range(len(resposta) - 1): ## Remove a ultima resposta
+            textRespostas += nameUser + ": " + resposta[i]
+        respostaRemovida = resposta[len(resposta) - 1]
+        respostas = textRespostas
+        print("Resposta removida com sucesso!")
+        print("-------------------------------------")
+        ## Impressão a ultima resposta do chat
+        print(nameUser + ": " + respostaRemovida)
+        print("-------------------------------------")
+
 
     ## EXPORTAR O TREINAMENTO
     def exportTrain():
@@ -117,7 +166,7 @@ def main():
         if not os.path.exists("saves"):
             os.makedirs("saves")
         # Cria o arquivo json com o treinamento
-        with open("saves/train_" + dataAtual + ".json", "w", encoding="utf-8") as file:
+        with open("saves/train_" + dataAtual + ".txt", "w", encoding="utf-8") as file:
             file.write(respostas)
         # Verifica se o arquivo foi criado
         if os.path.exists("saves/train_" + dataAtual + ".json"):
@@ -127,19 +176,34 @@ def main():
             print("Erro ao exportar o treinamento!")
 
     ## IMPORTAR O TREINAMENTO
-    def importTrain(nameFile):
-        # Verifica se existe a pasta saves
-        if not os.path.exists("saves"):
-            os.makedirs("saves")
-        # Verifica se o arquivo existe
-        if os.path.exists("saves/" + nameFile):
-            # Abre o arquivo
-            with open("saves/" + nameFile, "r", encoding="utf-8") as file:
-                # Pega o conteudo do arquivo
-                respostas = file.read()
-            print("Treinamento importado com sucesso!")
+    def importTrain(nameFile, curtidas = False):
+        global respostas
+        if curtidas:
+            # Verifica se existe a pasta tempResponses
+            if not os.path.exists("tempResponses"):
+                os.makedirs("tempResponses")
+            # Verifica se o arquivo existe
+            if os.path.exists("tempResponses/" + nameFile + ".txt"):
+                # Abre o arquivo
+                with open("tempResponses/" + nameFile + ".txt", "r", encoding="utf-8") as file:
+                    # Pega o conteudo do arquivo
+                    respostas = file.read()
+                print("Treinamento importado com sucesso!")
+            else:
+                print("Arquivo " + nameFile + ".txt não encontrado!")
         else:
-            print("Arquivo não encontrado!")
+            # Verifica se existe a pasta saves
+            if not os.path.exists("saves"):
+                os.makedirs("saves")
+            # Verifica se o arquivo existe
+            if os.path.exists("saves/" + nameFile):
+                # Abre o arquivo
+                with open("saves/" + nameFile, "r", encoding="utf-8") as file:
+                    # Pega o conteudo do arquivo
+                    respostas = file.read()
+                print("Treinamento importado com sucesso!")
+            else:
+                print("Arquivo não encontrado!")
 
     ## RESETAR O CHAT
     def resetTrain():
@@ -167,7 +231,7 @@ def main():
             # Executa o comando
             executeCommand(comand)
 
-        respostas += prompt + "\n" + response + "<|endoftext|>\n"
+        respostas += prompt + response + "<|endoftext|>"
         print(response)
 
 
