@@ -1,2 +1,4 @@
 config/key.py
 dist/config/settings.json
+Adiconar todos os arquivos .pyc
+*.pyc

@@ -24,7 +24,20 @@ parser.add_argument("-n", "--user", help="O seu nome.", type=str)
 
 def main():
     global respostas
-    ## CRIAR IMAGEM
+
+    ## GERAR IMAGEM
+    def generatImage(promptImage, size, n = 4):
+            try:
+                response = openai.Image.create( prompt=promptImage, n=n, size=size)  # Cria a imagem
+                if response['data'] != []:
+                    for i in response['data']:
+                        webbrowser.open(i['url']) # Abre a imagem criada no navegador
+            except openai.error.OpenAIError as e:
+                print('## Ocorreu um erro ao criar a imagem ##')
+                print('Erro: ', e.error['message'])
+                print('Tipo: ', e.error['type'])
+
+    ## ENTRADA PARA CRIAÇÃO DE IMAGEM
     def createImage():
         tamanhos = {  # Lista de tamanhos de imagens
             "1": "256x256",
@@ -36,13 +49,18 @@ def main():
         size = input("Tamanho da imagem: ")
         size = tamanhos[size]
         promptImage = input("Descrição da imagem: ")
-        responseImage = []
-        for i in range(4):  # Loop para criar 4 imagens
-            response = openai.Image.create( prompt=promptImage, n=1, size=size)  # Cria a imagem
-            responseImage.append(response)  # Adiciona a imagem no array
-        for response in responseImage:  # Pega a url da primeira imagem
-            response = response['data'][0]['url']
-            webbrowser.open(response)  # Abre a imagem criada no navegador
+        generatImage(promptImage, size)
+        input("Coninuar...")
+        print("1 - Reecriar imagem com o mesmo prompt")
+        print("2 - Criar nova imagem")
+        print("3 - Voltar ao chat")
+        op = input("Opção: ")
+        if op == "1":
+            print("Digite a quantidade de imagens que deseja criar")
+            n = int(input("Quantidade(1/10): "))
+            generatImage(promptImage, size, n)
+        elif op == "2":
+            createImage()
 
     ## EXECUTAR COMPLETION
     def creatCompletion(model, prompt, temperature, max_tokens, train, respostas):
