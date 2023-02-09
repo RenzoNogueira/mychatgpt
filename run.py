@@ -240,7 +240,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.key:
         key = args.key
-        print("Chave de API redefinida", openai.api_key)
+        print("Chave de API redefinida")
     if args.user:
         nameUser = args.user
         print("Novo usuário definido: " + nameUser)
