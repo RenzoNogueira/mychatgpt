@@ -109,14 +109,8 @@ def main():
         elif command == "!export":
             exportTrain()
         elif command == "!import":
-            print("Esolha o tipo de arquivo")
-            print("1 - Buscar conversas salvas")
-            print("2 - Buscar respostas curtidas")
-            op = input("Opção: ")
-            if op == "1":
-                importTrain(input("Nome do arquivo: "), False)
-            elif op == "2":
-                importTrain(input("Data do arquivo(dd-mm-aaaa): "), True)
+            print("Exemplo: C:/Users/Usuario/Desktop/train.txt")
+            importTrain(input("Localização do arquivo: "))
         elif command == "!reset":
             resetTrain()
         elif command == "!like":
@@ -132,13 +126,13 @@ def main():
         global nomeUser
         resposta = respostas.split(nameUser + ": ")
         ## Salva a ultima resposta do chat
-        respostasCurtidas += nameUser + ": " + resposta[1]
-        ## Verifica se existe a pasta tempResponses
-        if not os.path.exists("tempResponses"):
-            os.makedirs("tempResponses")
+        respostasCurtidas += nameUser + ": " + resposta[len(resposta) - 1]
+        ## Verifica se existe a pasta like_responses
+        if not os.path.exists("like_responses"):
+            os.makedirs("like_responses")
         ## Cria o arquivo txt com as respostas curtidas
-        date = datetime.now().strftime("%d-%m-%Y")
-        with open("tempResponses/" + date + ".txt", "w", encoding="utf-8") as file:
+        nameFile = datetime.now().strftime("%d-%m-%Y")
+        with open("like_responses/" + nameFile + ".txt", "w", encoding="utf-8") as file:
             file.write(respostasCurtidas)
 
     ## DESCURTIR A RESPOSTA
@@ -161,49 +155,42 @@ def main():
 
     ## EXPORTAR O TREINAMENTO
     def exportTrain():
-        dataAtual = datetime.now().strftime("%d-%m-%Y")
+        nameFile = datetime.now().strftime("%d-%m-%Y")
         # Verifica se existe a pasta saves
         if not os.path.exists("saves"):
             os.makedirs("saves")
         # Cria o arquivo json com o treinamento
-        with open("saves/train_" + dataAtual + ".txt", "w", encoding="utf-8") as file:
+        with open("saves/train_" + nameFile + ".txt", "w", encoding="utf-8") as file:
             file.write(respostas)
         # Verifica se o arquivo foi criado
-        if os.path.exists("saves/train_" + dataAtual + ".json"):
+        if os.path.exists("saves/train_" + nameFile + ".json"):
             print("Treinamento exportado com sucesso!")
-            print("Arquivo: train_" + dataAtual + ".json")
+            print("Arquivo: train_" + nameFile + ".json")
         else:
             print("Erro ao exportar o treinamento!")
 
+    ## SALVAR PROMPT NA PASTA TEMP
+    def savePrompt(prompt):
+        nameFile = datetime.now().strftime("%d-%m-%Y") # Prompts do dia atual
+        # Verifica se existe a pasta temp_prompts
+        if not os.path.exists("temp_prompts"):
+            os.makedirs("temp_prompts")
+        # Cria o arquivo json com o treinamento
+        with open("temp_prompts/prompt_" + nameFile + ".txt", "w", encoding="utf-8") as file:
+            file.write(prompt)
+
     ## IMPORTAR O TREINAMENTO
-    def importTrain(nameFile, curtidas = False):
+    def importTrain(nameFile):
         global respostas
-        if curtidas:
-            # Verifica se existe a pasta tempResponses
-            if not os.path.exists("tempResponses"):
-                os.makedirs("tempResponses")
-            # Verifica se o arquivo existe
-            if os.path.exists("tempResponses/" + nameFile + ".txt"):
-                # Abre o arquivo
-                with open("tempResponses/" + nameFile + ".txt", "r", encoding="utf-8") as file:
-                    # Pega o conteudo do arquivo
-                    respostas = file.read()
-                print("Treinamento importado com sucesso!")
-            else:
-                print("Arquivo " + nameFile + ".txt não encontrado!")
+        # Verifica se o arquivo existe
+        if os.path.exists(nameFile):
+            # Abre o arquivo
+            with open(nameFile, "r", encoding="utf-8") as file:
+                respostas = file.read()
+            print("Treinamento importado com sucesso!")
+            print("Arquivo: " + nameFile)
         else:
-            # Verifica se existe a pasta saves
-            if not os.path.exists("saves"):
-                os.makedirs("saves")
-            # Verifica se o arquivo existe
-            if os.path.exists("saves/" + nameFile):
-                # Abre o arquivo
-                with open("saves/" + nameFile, "r", encoding="utf-8") as file:
-                    # Pega o conteudo do arquivo
-                    respostas = file.read()
-                print("Treinamento importado com sucesso!")
-            else:
-                print("Arquivo não encontrado!")
+            print("Erro ao importar o treinamento!")
 
     ## RESETAR O CHAT
     def resetTrain():
@@ -231,7 +218,8 @@ def main():
             # Executa o comando
             executeCommand(comand)
 
-        respostas += prompt + response + "<|endoftext|>"
+        respostas += prompt + response + "<|endoftext|>\n"
+        savePrompt(respostas) # Salva o prompt na pasta temp_prompts
         print(response)
 
 
