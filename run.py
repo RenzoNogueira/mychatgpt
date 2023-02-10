@@ -1,8 +1,8 @@
-## importar arquivo functions.py da pasta functions
+# importar arquivo functions.py da pasta functions
 import openai
 import argparse
 import os
-## importar modulo para data
+# importar modulo para data
 from datetime import datetime
 import webbrowser
 from train import *
@@ -17,16 +17,15 @@ respostas = ""
 respostasCurtidas = ""
 
 parser = argparse.ArgumentParser()  # cria um objeto para receber os argumentos
-## Chave da API
+# Chave da API
 parser.add_argument("-k", "--key", help="Sua chave da OpenAI.", type=str)
-## O Nome do usuário
+# O Nome do usuário
 parser.add_argument("-n", "--user", help="O seu nome.", type=str)
-
 
 def main():
     global respostas
 
-    ## GERAR IMAGEM
+    # GERAR IMAGEM
     def generatImage(promptImage, size, n = 4):
         try:
             response = openai.Image.create( prompt=promptImage, n=n, size=size)  # Cria a imagem
@@ -34,12 +33,12 @@ def main():
                 for i in response['data']:
                     webbrowser.open(i['url']) # Abre a imagem criada no navegador
         except openai.error.OpenAIError as e:
-            print('## Ocorreu um erro ao criar a imagem ##')
+            print('# Ocorreu um erro ao criar a imagem #')
             print('Erro: ', e.error['message'])
             print('Tipo: ', e.error['type'])
 
-    ## ENTRADA PARA CRIAÇÃO DE IMAGEM
-    def createImage():
+    # ENTRADA PARA CRIAÇÃO DE IMAGEM
+    def create_image():
         tamanhos = {  # Lista de tamanhos de imagens
             "1": "256x256",
             "2": "512x512",
@@ -61,10 +60,10 @@ def main():
             n = int(input("Quantidade(1/10): "))
             generatImage(promptImage, size, n)
         elif op == "2":
-            createImage()
+            create_image()
 
-    ## EXECUTAR COMPLETION
-    def creatCompletion(model, prompt, temperature, max_tokens, train, respostas):
+    # EXECUTAR COMPLETION
+    def creat_completion(model, prompt, temperature, max_tokens, train, respostas):
         response = openai.Completion.create(
             model=model,
             prompt=train + respostas + "Você: " + prompt,
@@ -74,15 +73,15 @@ def main():
         response = response["choices"][0]["text"]
         return response
 
-    ## EXECUTAR COMANDOS
-    def executeCommand(command):
+    # EXECUTAR COMANDOS
+    def execute_command(command):
         os.system(command)
 
-    ## LIMPAR O CONSOLE
-    def clearConsole():
+    # LIMPAR O CONSOLE
+    def clear_console():
         os.system("cls")
 
-    ## FUNÇÃO PARA MOSTRAR COMANDOS DISPONÍVEIS
+    # FUNÇÃO PARA MOSTRAR COMANDOS DISPONÍVEIS
     def help():
         print("Comandos disponíveis: ")
         print("!clear - Limpar o console")
@@ -95,66 +94,66 @@ def main():
         print("!like - Curtir a resposta do chat")
         print("!reset - Resetar o chat")
 
-    ## VERIFICAR COMANDOS
-    def checkCommand(command):
+    # VERIFICAR COMANDOS
+    def check_command(command):
         command = command.replace(nameUser + ": ", "").replace("<|endoftext|>", "")
         if command == "!clear":
-            clearConsole()
+            clear_console()
         elif command == "!help":
             help()
         elif command == "!exit":
             exit()
         elif command == "!image":
-            createImage()
+            create_image()
         elif command == "!export":
-            exportTrain()
+            export_train()
         elif command == "!import":
             print("Exemplo: C:/Users/Usuario/Desktop/train.txt")
-            importTrain(input("Localização do arquivo: "))
+            import_train(input("Localização do arquivo: "))
         elif command == "!reset":
-            resetTrain()
+            reset_train()
         elif command == "!like":
             like()
         elif command == "!dislike":
             dislike()
 
-    ## CURTIR A RESPOSTA
+    # CURTIR A RESPOSTA
     def like():
-        ## Pega as ultimas 2 respostas do chat
+        # Pega as ultimas 2 respostas do chat
         global respostas
         global respostasCurtidas
         global nomeUser
         resposta = respostas.split(nameUser + ": ")
-        ## Salva a ultima resposta do chat
+        # Salva a ultima resposta do chat
         respostasCurtidas += nameUser + ": " + resposta[len(resposta) - 1]
-        ## Verifica se existe a pasta _like_responses
+        # Verifica se existe a pasta _like_responses
         if not os.path.exists("_like_responses"):
             os.makedirs("_like_responses")
-        ## Cria o arquivo txt com as respostas curtidas
+        # Cria o arquivo txt com as respostas curtidas
         nameFile = datetime.now().strftime("%d-%m-%Y")
         with open("_like_responses/" + nameFile + ".txt", "w", encoding="utf-8") as file:
             file.write(respostasCurtidas)
 
-    ## DESCURTIR A RESPOSTA
+    # DESCURTIR A RESPOSTA
     def dislike():
-        ## Remove a ultima resposta do chat
+        # Remove a última resposta do Chat
         global respostas
         resposta = respostas.split(nameUser + ": ")
         textRespostas = ""
         respostaRemovida = ""
-        for i in range(len(resposta) - 1): ## Remove a ultima resposta
+        for i in range(len(resposta) - 1): # Remove a ultima resposta
             textRespostas += nameUser + ": " + resposta[i]
         respostaRemovida = resposta[len(resposta) - 1]
         respostas = textRespostas
         print("Resposta removida com sucesso!")
         print("-------------------------------------")
-        ## Impressão a ultima resposta do chat
+        # Impressão a última resposta do Chat
         print(nameUser + ": " + respostaRemovida)
         print("-------------------------------------")
 
 
-    ## EXPORTAR O TREINAMENTO
-    def exportTrain():
+    # EXPORTAR O TREINAMENTO
+    def export_train():
         nameFile = datetime.now().strftime("%d-%m-%Y")
         # Verifica se existe a pasta _saves
         if not os.path.exists("_saves"):
@@ -169,8 +168,8 @@ def main():
         else:
             print("Erro ao exportar o treinamento!")
 
-    ## SALVAR PROMPT NA PASTA TEMP
-    def savePrompt(prompt):
+    # SALVAR PROMPT NA PASTA TEMP
+    def save_prompt(prompt):
         nameFile = datetime.now().strftime("%d-%m-%Y") # Prompts do dia atual
         # Verifica se existe a pasta _temp_prompts
         if not os.path.exists("_temp_prompts"):
@@ -183,8 +182,8 @@ def main():
             with open("_temp_prompts/prompt_" + nameFile + ".txt", "a", encoding="utf-8") as file:
                 file.write(prompt)
 
-    ## IMPORTAR O TREINAMENTO
-    def importTrain(nameFile):
+    # IMPORTAR O TREINAMENTO
+    def import_train(nameFile):
         global respostas
         # Verifica se o arquivo existe
         if os.path.exists(nameFile):
@@ -196,38 +195,38 @@ def main():
         else:
             print("Erro ao importar o treinamento!")
 
-    ## RESETAR O CHAT
-    def resetTrain():
+    # RESETAR O CHAT
+    def reset_train():
         global train
         train = ""
 
-    ## RECEBER PROMPT E PREPARAR ENVIO
-    def getPrompt(inputPrompt):
+    # RECEBER PROMPT E PREPARAR ENVIO
+    def get_prompt(input_prompt):
         global nameUser
-        return nameUser + ": " + inputPrompt + "<|endoftext|>"
+        return nameUser + ": " + input_prompt + "<|endoftext|>"
 
-    ## EXECUTAR O CHAT
+    # EXECUTAR O CHAT
     while True:
-        prompt = getPrompt(input(nameUser + ": "))
+        prompt = get_prompt(input(nameUser + ": "))
         # Verificar se o prompt é um comando
         if prompt.replace(nameUser + ": ", "").startswith("!"):
-            checkCommand(prompt)
+            check_command(prompt)
             continue
-        response = creatCompletion(model, prompt, temperature, max_tokens, train, respostas)
+        response = creat_completion(model, prompt, temperature, max_tokens, train, respostas)
 
         # Verifica se no texto contem chaves
         if "{" in response:
             # Pega o texto entre chaves
             comand = response.split("{")[1].split("}")[0]
             # Executa o comando
-            executeCommand(comand)
+            execute_command(comand)
         rprompt = prompt + response + "<|endoftext|>\n"
         respostas += rprompt
-        savePrompt(rprompt) # Salva o prompt na pasta _temp_prompts
+        save_prompt(rprompt) # Salva o prompt na pasta _temp_prompts
         print(response)
 
 
-## Executa a função main() se o arquivo for executado diretamente
+# Executa a função main() se o arquivo for executado diretamente
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.key:
@@ -236,11 +235,11 @@ if __name__ == "__main__":
     if args.user:
         nameUser = args.user
         print("Novo usuário definido: " + nameUser)
-    openai.api_key = key  ## Chave da API
-    ## Configura o treinamento
+    openai.api_key = key  # Chave da API
+    # Configura o treinamento
     train = train.replace("{nameUser}", nameUser).replace("{cunstomTrain}",
                                                           cunstomTrain.replace("{nameUser}", nameUser))
-    ## Imprime a ajuda sobre os argumentos
+    # Imprime a ajuda sobre os argumentos
     parser.print_help()
     print("........Chat Inicializado........")
     main()
