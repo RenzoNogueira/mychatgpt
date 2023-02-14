@@ -1,6 +1,6 @@
 # mychatgpt
 
-![Logo](assets/logo.png)
+![Logo](assets/bot.png)
 
 ## Utilização
 
