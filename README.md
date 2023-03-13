@@ -1,6 +1,7 @@
 # mychatgpt
-
-![Logo](assets/logo.png)
+<div align="center">
+  <img src="assets/bot.png" width="200">
+</div>
 
 ## Utilização
 
