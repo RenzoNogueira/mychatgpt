@@ -10,6 +10,25 @@
     --white: #e8e8e9;
 }
 
+/* A partir da largura 760px */
+@media screen and (min-width: 760px) {
+    #app {
+        position: absolute;
+        min-width: 520px;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 100%;
+    }
+}
+
+/* Menor que 760px */
+@media screen and (max-width: 760px) {
+    #bot {
+        /* Imagem do bot responsiva */
+        max-width: 40% !important;
+    }
+}
+
 h1 {
     font-family: 'Big Shoulders Display', cursive;
 }
@@ -58,7 +77,8 @@ body {
     width: fit-content !important;
 }
 
-input, .text {
+input,
+.text {
     background-color: #e8e8e9 !important;
 }
 

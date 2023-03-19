@@ -1,4 +1,5 @@
 dist/config/settings.json
+dist/vendor/
 *.pyc
 tempResposes/
 saves/

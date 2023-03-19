@@ -1,0 +1,34 @@
+Renzo: Renzo: execute vá até C:\Users\Renzo\Desktop\PROJETOS\meus_gastos e Crie um sistema de pastas e arquivos para um site html, e pasta para sistema back-end em php. baixe bootstrap, jquery, e vue jsCrie um sistema de pastas e arquivos para um site html, e pasta para sistema back-end em php. baixe bootstrap, jquery, e vue js em suas determinadas pastas. Cria as pastas para javascript e folhas de estilo<|endoftext|>
+Chat: {mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\html}
+{mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php}
+{mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\js}
+{mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\css}
+{cd C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\html}
+{curl -O https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css}
+{curl -O https://code.jquery.com/jquery-3.3.1.min.js}
+{curl -O https://cdn.jsdelivr.net/npm/vue/dist/vue.js}
+Aqui estão os comandos para criar as pastas e baixar os arquivos necessários.<|endoftext|>
+Renzo: execute vá até C:\Users\Renzo\Desktop\PROJETOS\meus_gastos e Crie um sistema de pastas e arquivos para um site html, e pasta para sistema back-end em php. baixe bootstrap, jquery, e vue jsCrie um sistema de pastas e arquivos para um site html, e pasta para sistema back-end em php. baixe bootstrap, jquery, e vue js em suas determinadas pastas. Cria as pastas para javascript e folhas de estilo, faça tudo em um comando<|endoftext|>
+Chat: {mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\html & mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php & mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\js & mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\css & cd C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\html & curl -O https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css & curl -O https://code.jquery.com/jquery-3.3.1.min.js & curl -O https://cdn.jsdelivr.net/npm/vue/dist/vue.js} Aqui está o comando para criar as pastas e baixar os arquivos necessários.<|endoftext|>
+Renzo: Baixe as bibliotecas<|endoftext|>
+Chat: {curl -O https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css & curl -O https://code.jquery.com/jquery-3.3.1.min.js & curl -O https://cdn.jsdelivr.net/npm/vue/dist/vue.js} Aqui está o comando para baixar as bibliotecas necessárias.<|endoftext|>
+Renzo: instale curls<|endoftext|>
+Chat: {curl -s https://curl.haxx.se/ca/cacert.pem -o cacert.pem & curl -sS https://curl.haxx.se/download/curl-7.64.1.tar.gz -o curl-7.64.1.tar.gz & tar -xzf curl-7.64.1.tar.gz & cd curl-7.64.1 & ./configure --with-ca-bundle=cacert.pem & make & make install} Aqui está o comando para instalar o Curl.<|endoftext|>
+Renzo: instale curl<|endoftext|>
+Chat: {curl -s https://curl.haxx.se/ca/cacert.pem -o cacert.pem & curl -sS https://curl.haxx.se/download/curl-7.64.1.tar.gz -o curl-7.64.1.tar.gz & tar -xzf curl-7.64.1.tar.gz & cd curl-7.64.1 & ./configure --with-ca-bundle=cacert.pem & make & make install} Aqui está o comando para instalar o Curl.<|endoftext|>
+Renzo: Crie o index.html<|endoftext|>
+Chat: {echo "<html> <head> <title>Meus Gastos</title> </head> <body> </body> </html>" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\html\index.html} Aqui está o comando para criar o arquivo index.html.<|endoftext|>
+Renzo: Crie os demais arquivos<|endoftext|>
+Chat: Qual tipo de arquivos você deseja criar?<|endoftext|>
+Renzo: javascript<|endoftext|>
+Chat: {echo "" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\js\script.js} Aqui está o comando para criar o arquivo script.js.<|endoftext|>
+Renzo: style<|endoftext|>
+Chat: {echo "" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\css\style.css} Aqui está o comando para criar o arquivo style.css.<|endoftext|>
+Renzo: o arquivo principal do php<|endoftext|>
+Chat: {echo "<?php // Arquivo principal do sistema ?>" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php\index.php} Aqui está o comando para criar o arquivo index.php.<|endoftext|>
+Renzo: Crie uma pasta sql dentro da pasta php<|endoftext|>
+Chat: {mkdir C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php\sql} Aqui está o comando para criar a pasta sql.<|endoftext|>
+Renzo: Crie um arquivo sql com o nome para o banco de dados do preojeto<|endoftext|>
+Chat: {echo "" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php\sql\database.sql} Aqui está o comando para criar o arquivo database.sql.<|endoftext|>
+Renzo: Crie um setup.php<|endoftext|>
+Chat: {echo "<?php // Arquivo de configuração ?>" > C:\Users\Renzo\Desktop\PROJETOS\meus_gastos\php\setup.php} Aqui está o comando para criar o arquivo setup.php.<|endoftext|>
