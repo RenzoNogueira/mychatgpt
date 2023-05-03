@@ -1,6 +1,9 @@
 dist/config/settings.json
-dist/vendor/
 *.pyc
 tempResposes/
 saves/
 tempResponses/
+.idea/
+node_modules/
+dist/vendor/
+dist/vendor/composer/installed.json

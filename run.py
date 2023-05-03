@@ -2,6 +2,7 @@
 import openai
 import argparse
 import os
+import json
 # importar modulo para data
 from datetime import datetime
 import webbrowser
@@ -13,8 +14,11 @@ temperature = 0
 max_tokens = 300
 key = "..."
 nameUser = "User"
-respostas = ""
-respostasCurtidas = ""
+chatContent = [{
+    "role": "assistant",
+    "content": "Assistente: Olá, eu sou o seu asistente virtual, como posso te ajudar?"
+}]
+chatContentCurtidas = ""
 
 parser = argparse.ArgumentParser()  # cria um objeto para receber os argumentos
 # Chave da API
@@ -23,7 +27,7 @@ parser.add_argument("-k", "--key", help="Sua chave da OpenAI.", type=str)
 parser.add_argument("-n", "--user", help="O seu nome.", type=str)
 
 def main():
-    global respostas
+    global chatContent
 
     # GERAR IMAGEM
     def generatImage(promptImage, size, n = 4):
@@ -63,14 +67,22 @@ def main():
             create_image()
 
     # EXECUTAR COMPLETION
-    def creat_completion(model, prompt, temperature, max_tokens, train, respostas):
-        response = openai.Completion.create(
+    def creat_completion(model, prompt, temperature, max_tokens, train, chatContent):
+        chatContent.append({
+                    "role": "user",
+                    "content": prompt
+                })
+        # Adiciona o treinamento na primeira posição do chatContent
+        chatContent.insert(0, {
+            "role": "system",
+            "content": train
+        })
+        response = openai.ChatCompletion.create(
             model=model,
-            prompt=train + respostas + "Você: " + prompt,
-            temperature=temperature,
-            max_tokens=max_tokens
+            # prompt=train + chatContent + "Você: " + prompt,
+            messages=chatContent,
         )
-        response = response["choices"][0]["text"]
+        response = response.choices[0].message
         return response
 
     # EXECUTAR COMANDOS
@@ -119,32 +131,32 @@ def main():
 
     # CURTIR A RESPOSTA
     def like():
-        # Pega as ultimas 2 respostas do chat
-        global respostas
-        global respostasCurtidas
+        # Pega as ultimas 2 chatContent do chat
+        global chatContent
+        global chatContentCurtidas
         global nomeUser
-        resposta = respostas.split(nameUser + ": ")
+        resposta = chatContent.split(nameUser + ": ")
         # Salva a ultima resposta do chat
-        respostasCurtidas += nameUser + ": " + resposta[len(resposta) - 1]
+        chatContentCurtidas += nameUser + ": " + resposta[len(resposta) - 1]
         # Verifica se existe a pasta _like_responses
         if not os.path.exists("_like_responses"):
             os.makedirs("_like_responses")
-        # Cria o arquivo txt com as respostas curtidas
+        # Cria o arquivo txt com as chatContent curtidas
         nameFile = datetime.now().strftime("%d-%m-%Y")
         with open("_like_responses/" + nameFile + ".txt", "w", encoding="utf-8") as file:
-            file.write(respostasCurtidas)
+            file.write(chatContentCurtidas)
 
     # DESCURTIR A RESPOSTA
     def dislike():
         # Remove a última resposta do Chat
-        global respostas
-        resposta = respostas.split(nameUser + ": ")
-        textRespostas = ""
+        global chatContent
+        resposta = chatContent.split(nameUser + ": ")
+        textchatContent = ""
         respostaRemovida = ""
         for i in range(len(resposta) - 1): # Remove a ultima resposta
-            textRespostas += nameUser + ": " + resposta[i]
+            textchatContent += nameUser + ": " + resposta[i]
         respostaRemovida = resposta[len(resposta) - 1]
-        respostas = textRespostas
+        chatContent = textchatContent
         print("Resposta removida com sucesso!")
         print("-------------------------------------")
         # Impressão a última resposta do Chat
@@ -160,7 +172,7 @@ def main():
             os.makedirs("_saves")
         # Cria o arquivo txt com o treinamento
         with open("_saves/train_" + nameFile + ".txt", "w", encoding="utf-8") as file:
-            file.write(respostas)
+            file.write(chatContent)
         # Verifica se o arquivo foi criado
         if os.path.exists("_saves/train_" + nameFile + ".txt"):
             print("Treinamento exportado com sucesso!")
@@ -170,6 +182,7 @@ def main():
 
     # SALVAR PROMPT NA PASTA TEMP
     def save_prompt(prompt):
+        prompt = json.dumps(prompt)
         nameFile = datetime.now().strftime("%d-%m-%Y") # Prompts do dia atual
         # Verifica se existe a pasta _temp_prompts
         if not os.path.exists("_temp_prompts"):
@@ -178,18 +191,18 @@ def main():
             with open("_temp_prompts/prompt_" + nameFile + ".txt", "w", encoding="utf-8") as file:
                 file.write(prompt)
         else:
-            # Concatena o prompt no aquivo txt
-            with open("_temp_prompts/prompt_" + nameFile + ".txt", "a", encoding="utf-8") as file:
+            # Sobrescreve o arquivo txt com o treinamento
+            with open("_temp_prompts/prompt_" + nameFile + ".txt", "w", encoding="utf-8") as file:
                 file.write(prompt)
 
     # IMPORTAR O TREINAMENTO
     def import_train(nameFile):
-        global respostas
+        global chatContent
         # Verifica se o arquivo existe
         if os.path.exists(nameFile):
             # Abre o arquivo
             with open(nameFile, "r", encoding="utf-8") as file:
-                respostas = file.read()
+                chatContent = file.read()
             print("Treinamento importado com sucesso!")
             print("Arquivo: " + nameFile)
         else:
@@ -212,18 +225,19 @@ def main():
         if prompt.replace(nameUser + ": ", "").startswith("!"):
             check_command(prompt)
             continue
-        response = creat_completion(model, prompt, temperature, max_tokens, train, respostas)
+        response = creat_completion(model, prompt, temperature, max_tokens, train, chatContent)
 
         # Verifica se no texto contem chaves
-        if "{" in response:
+        if "{" in response.content and "}" in response.content:
             # Pega o texto entre chaves
-            comand = response.split("{")[1].split("}")[0]
+            comand = response.content.split("{")[1].split("}")[0]
             # Executa o comando
             execute_command(comand)
-        rprompt = prompt + response + "<|endoftext|>\n"
-        respostas += rprompt
-        save_prompt(rprompt) # Salva o prompt na pasta _temp_prompts
-        print(response)
+        # Adiciona no array de chatContent
+        chatContent.append(response)
+
+        save_prompt(chatContent)
+        print(response.content)
 
 
 # Executa a função main() se o arquivo for executado diretamente
