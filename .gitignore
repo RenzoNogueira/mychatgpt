@@ -1,4 +1,3 @@
-dist/config/settings.json
 *.pyc
 tempResposes/
 saves/
@@ -7,3 +6,4 @@ tempResponses/
 node_modules/
 dist/vendor/
 dist/vendor/composer/installed.json
+dist/config/settings.json

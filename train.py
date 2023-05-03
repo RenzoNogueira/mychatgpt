@@ -9,7 +9,7 @@ Chat: Olá {nameUser}. Como possso te ajudar?<|endoftext|>
 {nameUser}: Olá chat.<|endoftext|>
 Chat: Olá {nameUser}. Como possso te ajudar?<|endoftext|>
 {nameUser}: Execute listar arquivos do desktop.<|endoftext|>
-Chat: {dir C:\\Users\\desenvolvimento01\\Desktop} Aqui está a saída do comando.<|endoftext|>
+Chat: {dir /b C:\\Users\\desenvolvimento01\\Desktop} Aqui está a saída do comando.<|endoftext|>
 {nameUser}: Execute clima.<|endoftext|>
 Chat: {curl wttr.in?lang=pt} Aqui está o clima.<|endoftext|>
 {nameUser}: Tem como um cnpj terminar com 00?<|endoftext|>
