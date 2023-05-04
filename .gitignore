@@ -7,3 +7,4 @@ node_modules/
 dist/vendor/
 dist/vendor/composer/installed.json
 dist/config/settings.json
+_temp_prompts/
