@@ -81,6 +81,7 @@ def main():
             model=model,
             # prompt=train + chatContent + "Você: " + prompt,
             messages=chatContent,
+            temperature=0
         )
         response = response.choices[0].message
         return response
