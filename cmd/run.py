@@ -238,7 +238,7 @@ def main():
         chatContent.append(response)
 
         save_prompt(chatContent)
-        print(response.content)
+        print("\033[32m" + response.content + "\033[0;0m")
 
 
 # Executa a função main() se o arquivo for executado diretamente
