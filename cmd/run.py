@@ -22,9 +22,11 @@ chatContentCurtidas = ""
 
 parser = argparse.ArgumentParser()  # cria um objeto para receber os argumentos
 # Chave da API
-parser.add_argument("-k", "--key", help="Sua chave da OpenAI.", type=str)
+parser.add_argument("-k", "--key", help="\033[1;34mSua chave da OpenAI.\033[m", type=str) # Cor azul
+
 # O Nome do usuário
-parser.add_argument("-n", "--user", help="O seu nome.", type=str)
+# parser.add_argument("-n", "--user", help="O seu nome.", type=str)
+parser.add_argument("-n", "--user", help="\033[1;34mO seu nome.\033[m", type=str) # Cor azul
 
 def main():
     global chatContent
@@ -68,15 +70,12 @@ def main():
 
     # EXECUTAR COMPLETION
     def creat_completion(model, prompt, temperature, max_tokens, train, chatContent):
+        chatContent = train
         chatContent.append({
                     "role": "user",
                     "content": prompt
                 })
         # Adiciona o treinamento na primeira posição do chatContent
-        chatContent.insert(0, {
-            "role": "system",
-            "content": train
-        })
         response = openai.ChatCompletion.create(
             model=model,
             # prompt=train + chatContent + "Você: " + prompt,
@@ -221,7 +220,7 @@ def main():
 
     # EXECUTAR O CHAT
     while True:
-        prompt = get_prompt(input(nameUser + ": "))
+        prompt = get_prompt(input("\033[33m" + nameUser + ": " + "\033[0;0m")) # Cor amarela
         # Verificar se o prompt é um comando
         if prompt.replace(nameUser + ": ", "").startswith("!"):
             check_command(prompt)
@@ -238,7 +237,7 @@ def main():
         chatContent.append(response)
 
         save_prompt(chatContent)
-        print("\033[32m" + response.content + "\033[0;0m")
+        print("\033[32m" + response.content + "\033[0;0m") # Cor verde
 
 
 # Executa a função main() se o arquivo for executado diretamente
@@ -246,15 +245,18 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.key:
         key = args.key
-        print("Chave de API redefinida")
+        print("\033[35m" + "Chave de API redefinida" + "\033[0;0m") # Cor rosa
     if args.user:
         nameUser = args.user
-        print("Novo usuário definido: " + nameUser)
+        print("\033[35m" + "Novo usuário definido: " + nameUser + "\033[0;0m") # Cor rosa
     openai.api_key = key  # Chave da API
     # Configura o treinamento
-    train = train.replace("{nameUser}", nameUser).replace("{cunstomTrain}",
-                                                          cunstomTrain.replace("{nameUser}", nameUser))
+    for i in range(len(train)):
+        train[i]['content'] = train[i]['content'].replace("{nameUser}", nameUser)
+        train[i]['content'] = train[i]['content'].replace("{cunstomTrain}", cunstomTrain.replace("{nameUser}", nameUser))
     # Imprime a ajuda sobre os argumentos
     parser.print_help()
-    print("........Chat Inicializado........")
+    # print("........Chat Inicializado........")
+    #cor rosa
+    print("\033[35m" + "........Chat Inicializado........" + "\033[0;0m")
     main()
