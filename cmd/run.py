@@ -242,6 +242,8 @@ def main():
 
 # Executa a função main() se o arquivo for executado diretamente
 if __name__ == "__main__":
+    # Limpa o console
+    os.system("cls" if os.name == "nt" else "clear")
     args = parser.parse_args()
     if args.key:
         key = args.key
