@@ -10,7 +10,7 @@ from train import *
 
 os.environ["PYTHONIOENCODING"] = "utf-8"
 model = "gpt-3.5-turbo"
-temperature = 0
+temperature = 1
 max_tokens = 300
 key = "..."
 nameUser = "User"
@@ -80,7 +80,8 @@ def main():
             model=model,
             # prompt=train + chatContent + "Você: " + prompt,
             messages=chatContent,
-            temperature=0
+            temperature=temperature,
+            presence_penalty=1,
         )
         response = response.choices[0].message
         return response
